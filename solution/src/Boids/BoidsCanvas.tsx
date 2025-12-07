@@ -6,7 +6,7 @@ import useMousePosition from './hooks/useMousePosition.ts';
 import {
   clearCanvas,
   drawBoids,
-  drawCursorInfluence,
+  drawDangerZone,
   FISH_COLORS,
 } from './methods/drawing.ts';
 import {
@@ -81,7 +81,7 @@ export default function BoidsCanvas() {
 
       if (dangerModeActive) {
         const dangerZoneRange = 100;
-        drawCursorInfluence(ctxForDraw, mousePosition, dangerZoneRange);
+        drawDangerZone(ctxForDraw, mousePosition, dangerZoneRange);
         pushAwayBoids(mousePosition, query, dangerZoneRange);
       }
 

@@ -94,7 +94,7 @@ function drawEye(ctx: CanvasRenderingContext2D) {
   ctx.fill();
 }
 
-export function drawCursorInfluence(
+export function drawDangerZone(
   ctx: CanvasRenderingContext2D,
   position: Vector2,
   range: number,
