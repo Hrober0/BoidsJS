@@ -3,7 +3,7 @@ import { createJSONStorage, persist } from 'zustand/middleware';
 import type { PrincipleStore } from './PrincipleStore';
 
 const DEFAULT_SEPARATION_RANGE = 35;
-const DEFAULT_SEPARATION_INFLUENCE = 0.6;
+const DEFAULT_SEPARATION_INFLUENCE = 0.7;
 
 export const useSeparationPrincipleStore = create<PrincipleStore>()(
   persist(

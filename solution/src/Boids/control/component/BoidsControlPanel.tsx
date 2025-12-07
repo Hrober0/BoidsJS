@@ -21,6 +21,7 @@ export function BoidsControlPanel() {
     resetSeparation();
     resetAlignment();
     resetCohesion();
+    resetGeneral();
   };
 
   return (
@@ -59,6 +60,8 @@ export function BoidsControlPanel() {
         <div className="mb-6 rounded-xl b bg-indigo-50/40 px-3 py-2 text-xs text-slate-700">
           Press 'spacebar' to toggle danger mode
         </div>
+
+        <GeneralSettingsPanel />
         <ForceSettingsPanel />
 
         <div className="mt-4 flex items-center justify-between text-[10px] text-slate-500">
@@ -75,6 +78,26 @@ export function BoidsControlPanel() {
     </div>
   );
 }
+
+function GeneralSettingsPanel() {
+  const { numberOfBoids, setNumberOfBoids } = useGeneralSettingStore();
+
+  return (
+    <Section separator>
+      <SectionTitle>General settings</SectionTitle>
+
+      <Slider
+        label="Number of boids"
+        min={0}
+        max={2000}
+        value={numberOfBoids}
+        onChange={setNumberOfBoids}
+        valueDisplay={String(numberOfBoids)}
+      />
+    </Section>
+  );
+}
+
 function ForceSettingsPanel() {
   const {
     range: alignmentRange,

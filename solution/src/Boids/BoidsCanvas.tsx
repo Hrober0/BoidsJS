@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
+import { useGeneralSettingStore } from './control/store/generalSettingStore.ts';
 import useDangerZone from './hooks/useDangerZone.ts';
+import useFullScreenCanvas from './hooks/useFullScreenCanvas.ts';
 import useMousePosition from './hooks/useMousePosition.ts';
 import {
   clearCanvas,
@@ -17,7 +19,6 @@ import {
 } from './methods/movement.ts';
 import { spatialHash } from './methods/spatialHash.ts';
 import type { Boid } from './types.ts';
-import useFullScreenCanvas from './hooks/useFullScreenCanvas.ts';
 
 export default function BoidsCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -28,13 +29,22 @@ export default function BoidsCanvas() {
 
   const boidsRef = useRef<Boid[]>([]);
 
+  const targetNumberOfBoids = useGeneralSettingStore(
+    (state) => state.numberOfBoids,
+  );
+
   // --- CREATE BOIDS ---
   useEffect(() => {
     if (!ctx) return;
 
-    const boids: Boid[] = [];
-    const BOIDS_COUNT = 800;
-    for (let i = 0; i < BOIDS_COUNT; i++) {
+    const currentNumberOfBoids = boidsRef.current.length ?? 0;
+
+    if (targetNumberOfBoids === currentNumberOfBoids) return;
+
+    const boids: Boid[] = boidsRef.current ?? [];
+
+    const newBoids = targetNumberOfBoids - currentNumberOfBoids;
+    for (let i = 0; i < newBoids; i++) {
       boids.push({
         position: {
           x: Math.random() * width,
@@ -48,8 +58,13 @@ export default function BoidsCanvas() {
       });
     }
 
+    const boidsToKill = currentNumberOfBoids - targetNumberOfBoids;
+    for (let i = 0; i < boidsToKill; i++) {
+      boids.pop();
+    }
+
     boidsRef.current = boids;
-  }, [ctx, height, width]);
+  }, [ctx, height, width, targetNumberOfBoids]);
 
   // --- ANIMATION LOOP ---
   useEffect(() => {
