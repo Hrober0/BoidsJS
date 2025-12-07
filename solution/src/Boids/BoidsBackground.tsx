@@ -1,31 +1,46 @@
 import { useEffect, useRef } from 'react';
-import useFullScreenCanvas from './hooks/useFullScreenCanvas.ts';
+import { useCanvas } from './hooks/useCanvas.ts';
+import useDangerZone from './hooks/useDangerZone.ts';
 import useMousePosition from './hooks/useMousePosition.ts';
-import { drawBoids } from './methods/drawing.ts';
+import {
+  clearCanvas,
+  drawBoids,
+  drawCursorInfluence,
+} from './methods/drawing.ts';
 import { pushBoids, updatePositions } from './methods/movement.ts';
 import { spatialHash } from './methods/spatialHash.ts';
 import type { Boid } from './types.ts';
 
 export default function BoidsBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  useFullScreenCanvas(canvasRef);
+  const { ctx, width, height } = useCanvas(canvasRef);
 
   const mousePosition = useMousePosition();
+  const { isActive: dangerModeActive } = useDangerZone();
+
+  const boidsRef = useRef<Boid[]>([]);
+  const mousePositionRef = useRef(mousePosition);
+  const dangerModeRef = useRef(dangerModeActive);
 
   useEffect(() => {
-    const canvas = canvasRef.current!;
-    const ctx = canvas.getContext('2d')!;
+    mousePositionRef.current = mousePosition;
+  }, [mousePosition]);
 
-    const { build, query } = spatialHash<Boid>(canvas.width, canvas.height, 60);
+  useEffect(() => {
+    dangerModeRef.current = dangerModeActive;
+  }, [dangerModeActive]);
 
-    // --- CREATE BOIDS ---
+  // --- CREATE BOIDS ---
+  useEffect(() => {
+    if (!ctx) return;
+
     const boids: Boid[] = [];
     const BOIDS_COUNT = 500;
     for (let i = 0; i < BOIDS_COUNT; i++) {
       boids.push({
         position: {
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
+          x: Math.random() * width,
+          y: Math.random() * height,
         },
         velocity: {
           x: Math.random() * 2 - 1,
@@ -34,16 +49,41 @@ export default function BoidsBackground() {
       });
     }
 
+    boidsRef.current = boids;
+  }, [ctx, width, height]);
+
+  // --- ANIMATION LOOP ---
+  useEffect(() => {
+    if (!ctx) return;
+    if (!boidsRef.current.length) return;
+
+    const { build, query } = spatialHash<Boid>(width, height, 60);
+    const ctxForDraw = ctx;
+    let frameId: number;
+
     function loop() {
+      const boids = boidsRef.current;
+      const mousePosition = mousePositionRef.current;
+      const dangerModeActive = dangerModeRef.current;
+
+      clearCanvas(ctxForDraw);
       build(boids);
-      pushBoids(mousePosition, query, 100, .2);
-      updatePositions(boids, canvas.width, canvas.height, 1);
-      drawBoids(boids, ctx);
-      requestAnimationFrame(loop);
+
+      if (dangerModeActive) {
+        drawCursorInfluence(ctxForDraw, mousePosition, 100);
+        pushBoids(mousePosition, query, 100, 0.2);
+      }
+
+      updatePositions(boids, width, height, 1);
+      drawBoids(boids, ctxForDraw);
+
+      frameId = requestAnimationFrame(loop);
     }
 
     loop();
-  }, [mousePosition]);
+
+    return () => cancelAnimationFrame(frameId);
+  }, [ctx, width, height, dangerModeRef, mousePositionRef]);
 
   return (
     <canvas

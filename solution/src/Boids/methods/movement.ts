@@ -7,16 +7,16 @@ export function updatePositions(
   canvasWidth: number,
   canvasHeight: number,
   targetSpeed: number,
-  speedNormalization: number = .1,
+  speedNormalization: number = 0.1,
 ) {
   for (let i = 0; i < boids.length; i++) {
     const b = boids[i];
 
     const speed = magnitude(b.velocity.x, b.velocity.y);
     const targetVelocity = {
-      x: b.velocity.x / speed * targetSpeed,
-      y: b.velocity.y / speed * targetSpeed,
-    }
+      x: (b.velocity.x / speed) * targetSpeed,
+      y: (b.velocity.y / speed) * targetSpeed,
+    };
 
     b.velocity.x += (targetVelocity.x - b.velocity.x) * speedNormalization;
     b.velocity.y += (targetVelocity.y - b.velocity.y) * speedNormalization;

@@ -1,6 +1,8 @@
 import { type RefObject, useEffect } from 'react';
 
-export default function useFullScreenCanvas(canvasRef: RefObject<HTMLCanvasElement | null>) {
+export default function useFullScreenCanvas(
+  canvasRef: RefObject<HTMLCanvasElement | null>,
+) {
   useEffect(() => {
     function resize() {
       const canvas = canvasRef.current;

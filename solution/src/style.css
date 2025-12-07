@@ -1,1 +1,7 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+body.danger-mode {
+  cursor:
+    url('/shark.png') 16 16,
+    auto;
+}
