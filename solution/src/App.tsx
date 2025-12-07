@@ -1,5 +1,5 @@
 import BoidsCanvas from './Boids/BoidsCanvas.tsx';
-import { BoidsControlPanel } from './Boids/control/BoidsControlPanel.tsx';
+import { BoidsControlPanel } from './Boids/control/component/BoidsControlPanel.tsx';
 
 export default function App() {
   return (

@@ -5,3 +5,30 @@ body.danger-mode {
     url('/shark.png') 16 16,
     auto;
 }
+
+/* white round scrollbar */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: white;
+  border-radius: 999px; /* fully round */
+  border: 2px solid rgba(0,0,0,0.1); /* subtle outline */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #f2f2f2;
+}
+
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: white transparent;
+}
