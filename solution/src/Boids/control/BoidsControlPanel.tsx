@@ -29,7 +29,7 @@ export function BoidsControlPanel() {
     setInfluence: setSeparationInfluence,
     reset: resetSeparation,
   } = useSeparationPrincipleStore();
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
 
   const ToggleCollapseIcon = collapsed ? IconChevronDown : IconChevronUp;
 

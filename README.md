@@ -16,5 +16,22 @@ TODO
 
 ### Przykłady działania symulacji
 
-TODO, dodac jakiegoś gifa (może 3 gify aby pokazać różne ustawienia
-poszczegołnych zasad, i z 2 ogólne screeny (np. jak wygląda danger mode i coś tam jeszcze))
+#### Ogólne działanie symulacji
+
+![boids-gif](./img/boids.gif)
+
+#### Przykład dużego wpływu `zasady rozdzielności`
+
+![boids-separation](./img/max-separation.png)
+
+#### Przykład dużego wpływu `zasady spójności`
+
+![boids-cohesion](./img/max-cohesion.png)
+
+#### Przykład dużego wpływu `zasady wyrównania`
+
+![boids-alignment](./img/max-alignment.png)
+
+#### Przykład trybu `danger mode`
+
+![boids-danger-mode](./img/danger-mode.png)
