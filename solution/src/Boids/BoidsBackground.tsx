@@ -6,6 +6,7 @@ import {
   clearCanvas,
   drawBoids,
   drawCursorInfluence,
+  FISH_COLORS,
 } from './methods/drawing.ts';
 import { pushBoids, updatePositions } from './methods/movement.ts';
 import { spatialHash } from './methods/spatialHash.ts';
@@ -46,6 +47,7 @@ export default function BoidsBackground() {
           x: Math.random() * 2 - 1,
           y: Math.random() * 2 - 1,
         },
+        colorIndex: Math.floor(Math.random() * FISH_COLORS.length),
       });
     }
 
