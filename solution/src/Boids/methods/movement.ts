@@ -1,18 +1,16 @@
 import type { Boid, Vector2 } from '../types.ts';
-import { magnitude } from './math.ts';
+import { calcMagnitudeOf, normalizeVector, vectorDiff } from './math.ts';
 import type { QueryMethod } from './spatialHash.ts';
 
-export function updatePositions(
+export function adjustVelocities(
   boids: Boid[],
-  canvasWidth: number,
-  canvasHeight: number,
   targetSpeed: number,
   speedNormalization: number = 0.1,
 ) {
   for (let i = 0; i < boids.length; i++) {
     const b = boids[i];
 
-    const speed = magnitude(b.velocity.x, b.velocity.y);
+    const speed = calcMagnitudeOf(b.velocity);
     const targetVelocity = {
       x: (b.velocity.x / speed) * targetSpeed,
       y: (b.velocity.y / speed) * targetSpeed,
@@ -20,6 +18,16 @@ export function updatePositions(
 
     b.velocity.x += (targetVelocity.x - b.velocity.x) * speedNormalization;
     b.velocity.y += (targetVelocity.y - b.velocity.y) * speedNormalization;
+  }
+}
+
+export function moveAndWrap(
+  boids: Boid[],
+  canvasWidth: number,
+  canvasHeight: number,
+) {
+  for (let i = 0; i < boids.length; i++) {
+    const b = boids[i];
 
     b.position.x += b.velocity.x;
     b.position.y += b.velocity.y;
@@ -34,19 +42,51 @@ export function updatePositions(
   }
 }
 
-export function pushBoids(
+export function pushAwayBoids(
   position: Vector2,
   query: QueryMethod<Boid>,
   range: number,
   influence: number = 0.1,
 ) {
   query(position, range, (boid) => {
-    const difX = boid.position.x - position.x;
-    const difY = boid.position.y - position.y;
-    const length = magnitude(difX, difY);
-    if (length == 0 || length > range) return;
+    const difVector = vectorDiff(boid.position, position);
 
-    boid.velocity.x += (difX / length) * influence;
-    boid.velocity.y += (difY / length) * influence;
+    if (calcMagnitudeOf(difVector) > range) {
+      return;
+    }
+
+    const normalizedDifVector = normalizeVector(difVector);
+    boid.velocity.x += normalizedDifVector.x * influence;
+    boid.velocity.y += normalizedDifVector.y * influence;
   });
+}
+
+export function applySeparationPrinciple(
+  boids: Boid[],
+  query: QueryMethod<Boid>,
+  separtion_range: number = 30,
+  influence: number = 0.65,
+) {
+  for (const boid of boids) {
+    let steerX = 0;
+    let steerY = 0;
+
+    query(boid.position, separtion_range, (neighbourBoid) => {
+      if (boid === neighbourBoid) return;
+
+      const difVector = vectorDiff(boid.position, neighbourBoid.position);
+      const distance = calcMagnitudeOf(difVector);
+
+      if (distance < separtion_range) {
+        const normalizedDifVector = normalizeVector(difVector);
+        const factor = 1 / distance;
+
+        steerX += normalizedDifVector.x * factor;
+        steerY += normalizedDifVector.y * factor;
+      }
+    });
+
+    boid.velocity.x += steerX * influence;
+    boid.velocity.y += steerY * influence;
+  }
 }

@@ -8,7 +8,12 @@ import {
   drawCursorInfluence,
   FISH_COLORS,
 } from './methods/drawing.ts';
-import { pushBoids, updatePositions } from './methods/movement.ts';
+import {
+  adjustVelocities,
+  applySeparationPrinciple,
+  moveAndWrap,
+  pushAwayBoids,
+} from './methods/movement.ts';
 import { spatialHash } from './methods/spatialHash.ts';
 import type { Boid } from './types.ts';
 
@@ -73,12 +78,15 @@ export default function BoidsBackground() {
 
       if (dangerModeActive) {
         drawCursorInfluence(ctxForDraw, mousePosition, 100);
-        pushBoids(mousePosition, query, 100, 0.2);
+        pushAwayBoids(mousePosition, query, 100, 0.2);
       }
 
-      updatePositions(boids, width, height, 1);
-      drawBoids(boids, ctxForDraw);
+      applySeparationPrinciple(boids, query);
 
+      adjustVelocities(boids, 1);
+      moveAndWrap(boids, width, height);
+
+      drawBoids(boids, ctxForDraw);
       frameId = requestAnimationFrame(loop);
     }
 
