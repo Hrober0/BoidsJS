@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import type { PrincipleState } from './PrincipleState';
+import type { PrincipleStore } from './PrincipleStore';
 
 const DEFAULT_SEPARATION_RANGE = 35;
 const DEFAULT_SEPARATION_INFLUENCE = 0.6;
 
-export const useSeparationPrincipleStore = create<PrincipleState>()(
+export const useSeparationPrincipleStore = create<PrincipleStore>()(
   persist(
     (set) => ({
       range: DEFAULT_SEPARATION_RANGE,

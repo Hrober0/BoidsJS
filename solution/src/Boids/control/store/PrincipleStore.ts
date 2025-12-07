@@ -1,4 +1,4 @@
-export type PrincipleState = {
+export type PrincipleStore = {
   range: number;
   influence: number;
   setRange: (range: number) => void;

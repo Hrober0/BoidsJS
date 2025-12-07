@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
-import type { PrincipleState } from './PrincipleState';
+import type { PrincipleStore } from './PrincipleStore';
 
 const DEFAULT_ALIGNMENT_RANGE = 50;
 const DEFAULT_ALIGNMENT_INFLUENCE = 0.04;
 
-export const useAlignmentPrincipleStore = create<PrincipleState>()(
+export const useAlignmentPrincipleStore = create<PrincipleStore>()(
   persist(
     (set) => ({
       range: DEFAULT_ALIGNMENT_RANGE,
