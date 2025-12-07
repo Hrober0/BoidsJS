@@ -1,4 +1,4 @@
-import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
+import { IconChevronDown } from '@tabler/icons-react';
 import { clsx } from 'clsx';
 import { useState } from 'react';
 import { useAlignmentPrincipleStore } from './store/alignmentPrincipleStore';
@@ -31,8 +31,6 @@ export function BoidsControlPanel() {
   } = useSeparationPrincipleStore();
   const [collapsed, setCollapsed] = useState(true);
 
-  const ToggleCollapseIcon = collapsed ? IconChevronDown : IconChevronUp;
-
   const settings = [
     {
       title: 'Separation principle',
@@ -64,7 +62,7 @@ export function BoidsControlPanel() {
   };
 
   return (
-    <div className="w-80 rounded-2xl bg-white/10 p-5 shadow-2xl backdrop-blur-[2px]">
+    <div className="w-80 max-h-full flex flex-col rounded-2xl bg-white/10 p-5 shadow-2xl backdrop-blur-[5px]">
       <div className="mb-3 pl-1.5 flex items-center justify-between">
         <div>
           <div className="text-lg font-semibold text-slate-900">
@@ -79,14 +77,21 @@ export function BoidsControlPanel() {
           onClick={() => setCollapsed((prev) => !prev)}
           className="flex rounded-full border border-slate-300/50 bg-white/70 p-1.5 hover:cursor-pointer"
         >
-          <ToggleCollapseIcon size={18} stroke={1.75} />
+          <IconChevronDown
+            size={18}
+            stroke={1.75}
+            className={clsx(
+              'transition-transform duration-200',
+              collapsed && 'rotate-180',
+            )}
+          />
         </button>
       </div>
 
       <div
         className={clsx(
-          'transition-all duration-200 ease-out overflow-hidden',
-          collapsed ? 'max-h-0 opacity-0' : 'max-h-[999px] opacity-100',
+          'transition-transform duration-200 overflow-y-auto',
+          collapsed ? 'max-h-0 opacity-0' : 'max-h-auto opacity-100',
         )}
       >
         <div className="mb-6 rounded-xl b bg-indigo-50/40 px-3 py-2 text-xs text-slate-700">
