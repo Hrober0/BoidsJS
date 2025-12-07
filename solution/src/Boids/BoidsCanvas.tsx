@@ -19,7 +19,7 @@ import {
 import { spatialHash } from './methods/spatialHash.ts';
 import type { Boid } from './types.ts';
 
-export default function BoidsBackground() {
+export default function BoidsCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { ctx, width, height } = useCanvas(canvasRef);
 
