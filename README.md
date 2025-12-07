@@ -1,5 +1,11 @@
 # Projekt nr. 60 - Symulacja ruchu ryb
 
+### Autorzy pracy
+
+- Aleksander Stanoch
+
+- Sebastian Abramowski
+
 ### Informacje ogólne
 
 **Algorytm boids** to prosty sposób na symulację zachowania stada, w naszym przypadku ryb. Polega na tym, że `każda ryba w ławicy patrzy na swoje bliskie otoczenie oraz stosuje się do trzech zasad`:
