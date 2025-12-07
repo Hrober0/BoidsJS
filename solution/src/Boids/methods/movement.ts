@@ -1,6 +1,6 @@
 import { useAlignmentPrincipleStore } from '../control/store/alignmentPrincipleStore.ts';
 import { useCohesionPrincipleStore } from '../control/store/cohesionPrincipleStore.ts';
-import { useSeparationPrincipleStore } from '../control/store/SeparationPrincipleStore.ts';
+import { useSeparationPrincipleStore } from '../control/store/separationPrincipleStore.ts';
 import type { Boid, Vector2 } from '../types.ts';
 import { calcMagnitudeOf, normalizeVector, vectorDiff } from './math.ts';
 import type { QueryMethod } from './spatialHash.ts';
