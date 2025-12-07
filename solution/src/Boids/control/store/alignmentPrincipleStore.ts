@@ -1,24 +1,23 @@
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import type { PrincipleState } from './PrincipleState';
 
 const DEFAULT_ALIGNMENT_RANGE = 50;
 const DEFAULT_ALIGNMENT_INFLUENCE = 0.04;
 
-type AlignmentPrincipleState = {
-  alignmentRange: number;
-  alignmentInfluence: number;
-  setAlignmentRange: (range: number) => void;
-  setAlignmentInfluence: (influence: number) => void;
-};
-
-export const useAlignmentPrincipleStore = create<AlignmentPrincipleState>()(
+export const useAlignmentPrincipleStore = create<PrincipleState>()(
   persist(
     (set) => ({
-      alignmentRange: DEFAULT_ALIGNMENT_RANGE,
-      alignmentInfluence: DEFAULT_ALIGNMENT_INFLUENCE,
-      setAlignmentRange: (range) => set({ alignmentRange: range }),
-      setAlignmentInfluence: (influence) =>
-        set({ alignmentInfluence: influence }),
+      range: DEFAULT_ALIGNMENT_RANGE,
+      influence: DEFAULT_ALIGNMENT_INFLUENCE,
+      setRange: (range) => set({ range }),
+      setInfluence: (influence) => set({ influence }),
+      reset: () => {
+        set({
+          range: DEFAULT_ALIGNMENT_RANGE,
+          influence: DEFAULT_ALIGNMENT_INFLUENCE,
+        });
+      },
     }),
     {
       name: 'boids-alignment',

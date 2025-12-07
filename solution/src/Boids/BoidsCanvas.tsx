@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { BoidsControlPanel } from './control/BoidsControlPanel.tsx';
 import { useCanvas } from './hooks/useCanvas.ts';
 import useDangerZone from './hooks/useDangerZone.ts';
 import useMousePosition from './hooks/useMousePosition.ts';
@@ -101,16 +102,21 @@ export default function BoidsCanvas() {
   }, [ctx, width, height, dangerModeRef, mousePositionRef]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: -1,
-        pointerEvents: 'none',
-      }}
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'fixed',
+          inset: 0,
+          width: '100vw',
+          height: '100vh',
+          zIndex: -1,
+          pointerEvents: 'none',
+        }}
+      />
+      <div className="fixed top-4 left-4">
+        <BoidsControlPanel />
+      </div>
+    </>
   );
 }

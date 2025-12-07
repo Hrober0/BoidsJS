@@ -68,14 +68,13 @@ export function applySeparationPrinciple(
   boids: Boid[],
   query: QueryMethod<Boid>,
 ) {
-  const { separationRange, separationInfluence } =
-    useSeparationPrincipleStore.getState();
+  const { range, influence } = useSeparationPrincipleStore.getState();
 
   for (const boid of boids) {
     let steerX = 0;
     let steerY = 0;
 
-    query(boid.position, separationRange, (neighbourBoid) => {
+    query(boid.position, range, (neighbourBoid) => {
       if (boid === neighbourBoid) {
         return;
       }
@@ -83,7 +82,7 @@ export function applySeparationPrinciple(
       const difVector = vectorDiff(boid.position, neighbourBoid.position);
       const distance = calcMagnitudeOf(difVector);
 
-      if (distance === 0 || distance > separationRange) {
+      if (distance === 0 || distance > range) {
         return;
       }
 
@@ -94,8 +93,8 @@ export function applySeparationPrinciple(
       steerY += normalizedDifVector.y * factor;
     });
 
-    boid.velocity.x += steerX * separationInfluence;
-    boid.velocity.y += steerY * separationInfluence;
+    boid.velocity.x += steerX * influence;
+    boid.velocity.y += steerY * influence;
   }
 }
 
@@ -103,21 +102,20 @@ export function applyCohesionPrinciple(
   boids: Boid[],
   query: QueryMethod<Boid>,
 ) {
-  const { cohesionRange, cohesionInfluence } =
-    useCohesionPrincipleStore.getState();
+  const { range, influence } = useCohesionPrincipleStore.getState();
 
   for (const boid of boids) {
     let sumX = 0;
     let sumY = 0;
     let count = 0;
 
-    query(boid.position, cohesionRange, (neighbourBoid) => {
+    query(boid.position, range, (neighbourBoid) => {
       if (boid === neighbourBoid) return;
 
       // ensure proper range since spatial hash might return some out of range boids
       if (
         calcMagnitudeOf(vectorDiff(boid.position, neighbourBoid.position)) >
-        cohesionRange
+        range
       ) {
         return;
       }
@@ -139,8 +137,8 @@ export function applyCohesionPrinciple(
     const directionToCom = vectorDiff(com, boid.position);
     const normalizedDirectionToCom = normalizeVector(directionToCom);
 
-    boid.velocity.x += normalizedDirectionToCom.x * cohesionInfluence;
-    boid.velocity.y += normalizedDirectionToCom.y * cohesionInfluence;
+    boid.velocity.x += normalizedDirectionToCom.x * influence;
+    boid.velocity.y += normalizedDirectionToCom.y * influence;
   }
 }
 
@@ -148,20 +146,19 @@ export function applyAlignmentPrinciple(
   boids: Boid[],
   query: QueryMethod<Boid>,
 ) {
-  const { alignmentRange, alignmentInfluence } =
-    useAlignmentPrincipleStore.getState();
+  const { range, influence } = useAlignmentPrincipleStore.getState();
 
   for (const boid of boids) {
     let sumVX = 0;
     let sumVY = 0;
     let count = 0;
 
-    query(boid.position, alignmentRange, (neighbourBoid) => {
+    query(boid.position, range, (neighbourBoid) => {
       if (boid === neighbourBoid) return;
 
       if (
         calcMagnitudeOf(vectorDiff(boid.position, neighbourBoid.position)) >
-        alignmentRange
+        range
       ) {
         return;
       }
@@ -181,7 +178,7 @@ export function applyAlignmentPrinciple(
     };
     const normalizedAvgVelocity = normalizeVector(avgVelocity);
 
-    boid.velocity.x += normalizedAvgVelocity.x * alignmentInfluence;
-    boid.velocity.y += normalizedAvgVelocity.y * alignmentInfluence;
+    boid.velocity.x += normalizedAvgVelocity.x * influence;
+    boid.velocity.y += normalizedAvgVelocity.y * influence;
   }
 }
