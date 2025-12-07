@@ -1,6 +1,4 @@
 import { useEffect, useRef } from 'react';
-import { BoidsControlPanel } from './control/BoidsControlPanel.tsx';
-import { useCanvas } from './hooks/useCanvas.ts';
 import useDangerZone from './hooks/useDangerZone.ts';
 import useMousePosition from './hooks/useMousePosition.ts';
 import {
@@ -19,25 +17,16 @@ import {
 } from './methods/movement.ts';
 import { spatialHash } from './methods/spatialHash.ts';
 import type { Boid } from './types.ts';
+import useFullScreenCanvas from './hooks/useFullScreenCanvas.ts';
 
 export default function BoidsCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { ctx, width, height } = useCanvas(canvasRef);
+  const { ctx, width, height } = useFullScreenCanvas(canvasRef);
 
   const mousePosition = useMousePosition();
   const { isActive: dangerModeActive } = useDangerZone();
 
   const boidsRef = useRef<Boid[]>([]);
-  const mousePositionRef = useRef(mousePosition);
-  const dangerModeRef = useRef(dangerModeActive);
-
-  useEffect(() => {
-    mousePositionRef.current = mousePosition;
-  }, [mousePosition]);
-
-  useEffect(() => {
-    dangerModeRef.current = dangerModeActive;
-  }, [dangerModeActive]);
 
   // --- CREATE BOIDS ---
   useEffect(() => {
@@ -60,7 +49,7 @@ export default function BoidsCanvas() {
     }
 
     boidsRef.current = boids;
-  }, [ctx, width, height]);
+  }, [ctx, height, width]);
 
   // --- ANIMATION LOOP ---
   useEffect(() => {
@@ -73,8 +62,6 @@ export default function BoidsCanvas() {
 
     function loop() {
       const boids = boidsRef.current;
-      const mousePosition = mousePositionRef.current;
-      const dangerModeActive = dangerModeRef.current;
 
       clearCanvas(ctxForDraw);
       build(boids);
@@ -99,24 +86,19 @@ export default function BoidsCanvas() {
     loop();
 
     return () => cancelAnimationFrame(frameId);
-  }, [ctx, width, height, dangerModeRef, mousePositionRef]);
+  }, [ctx, width, height, mousePosition, dangerModeActive]);
 
   return (
-    <>
-      <canvas
-        ref={canvasRef}
-        style={{
-          position: 'fixed',
-          inset: 0,
-          width: '100vw',
-          height: '100vh',
-          zIndex: -1,
-          pointerEvents: 'none',
-        }}
-      />
-      <div className="fixed top-4 left-4">
-        <BoidsControlPanel />
-      </div>
-    </>
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: -1,
+        pointerEvents: 'none',
+      }}
+    />
   );
 }
