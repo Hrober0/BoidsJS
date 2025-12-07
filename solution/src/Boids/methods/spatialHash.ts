@@ -43,14 +43,10 @@ export function spatialHash<T extends { position: Vector2 }>(
     range: number,
     callBack: (item: T) => void,
   ) {
-    const px = Math.floor(position.x / cellSize);
-    const py = Math.floor(position.y / cellSize);
-
-    const cellOffset = Math.max(1, Math.floor(range / cellSize));
-    const minX = Math.max(0, px - cellOffset);
-    const maxX = Math.min(cellsX, px + cellOffset);
-    const minY = Math.max(0, py - cellOffset);
-    const maxY = Math.min(cellsY, py + cellOffset);
+    const minX = Math.max(0, Math.floor((position.x - range) / cellSize));
+    const maxX = Math.min(cellsX, Math.floor((position.x + range) / cellSize));
+    const minY = Math.max(0, Math.floor((position.y - range) / cellSize));
+    const maxY = Math.min(cellsY, Math.floor((position.y + range) / cellSize));
 
     for (let ox = minX; ox <= maxX; ox++) {
       for (let oy = minY; oy <= maxY; oy++) {
