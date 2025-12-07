@@ -46,7 +46,7 @@ export function pushAwayBoids(
   position: Vector2,
   query: QueryMethod<Boid>,
   range: number,
-  influence: number = 0.1,
+  influence: number = 0.2,
 ) {
   query(position, range, (boid) => {
     const difVector = vectorDiff(boid.position, position);
@@ -72,7 +72,9 @@ export function applySeparationPrinciple(
     let steerY = 0;
 
     query(boid.position, separtion_range, (neighbourBoid) => {
-      if (boid === neighbourBoid) return;
+      if (boid === neighbourBoid) {
+        return;
+      }
 
       const difVector = vectorDiff(boid.position, neighbourBoid.position);
       const distance = calcMagnitudeOf(difVector);
@@ -88,5 +90,41 @@ export function applySeparationPrinciple(
 
     boid.velocity.x += steerX * influence;
     boid.velocity.y += steerY * influence;
+  }
+}
+
+export function applyCohesionPrinciple(
+  boids: Boid[],
+  query: QueryMethod<Boid>,
+  cohesionRange: number = 50,
+  influence: number = 0.05,
+) {
+  for (const boid of boids) {
+    let sumX = 0;
+    let sumY = 0;
+    let count = 0;
+
+    query(boid.position, cohesionRange, (neighbourBoid) => {
+      if (boid === neighbourBoid) return;
+
+      sumX += neighbourBoid.position.x;
+      sumY += neighbourBoid.position.y;
+      count++;
+    });
+
+    if (count === 0) {
+      continue;
+    }
+
+    // COM - Center of Mass
+    const com: Vector2 = {
+      x: sumX / count,
+      y: sumY / count,
+    };
+    const directionToCom = vectorDiff(com, boid.position);
+    const normalizedDirectionToCom = normalizeVector(directionToCom);
+
+    boid.velocity.x += normalizedDirectionToCom.x * influence;
+    boid.velocity.y += normalizedDirectionToCom.y * influence;
   }
 }

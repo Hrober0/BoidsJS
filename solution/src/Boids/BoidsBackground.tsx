@@ -10,6 +10,7 @@ import {
 } from './methods/drawing.ts';
 import {
   adjustVelocities,
+  applyCohesionPrinciple,
   applySeparationPrinciple,
   moveAndWrap,
   pushAwayBoids,
@@ -77,11 +78,13 @@ export default function BoidsBackground() {
       build(boids);
 
       if (dangerModeActive) {
-        drawCursorInfluence(ctxForDraw, mousePosition, 100);
-        pushAwayBoids(mousePosition, query, 100, 0.2);
+        const dangerZoneRange = 100;
+        drawCursorInfluence(ctxForDraw, mousePosition, dangerZoneRange);
+        pushAwayBoids(mousePosition, query, dangerZoneRange);
       }
 
       applySeparationPrinciple(boids, query);
+      applyCohesionPrinciple(boids, query);
 
       adjustVelocities(boids, 1);
       moveAndWrap(boids, width, height);
