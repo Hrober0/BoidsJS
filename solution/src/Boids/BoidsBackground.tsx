@@ -10,6 +10,7 @@ import {
 } from './methods/drawing.ts';
 import {
   adjustVelocities,
+  applyAlignmentPrinciple,
   applyCohesionPrinciple,
   applySeparationPrinciple,
   moveAndWrap,
@@ -42,7 +43,7 @@ export default function BoidsBackground() {
     if (!ctx) return;
 
     const boids: Boid[] = [];
-    const BOIDS_COUNT = 500;
+    const BOIDS_COUNT = 800;
     for (let i = 0; i < BOIDS_COUNT; i++) {
       boids.push({
         position: {
@@ -85,6 +86,7 @@ export default function BoidsBackground() {
 
       applySeparationPrinciple(boids, query);
       applyCohesionPrinciple(boids, query);
+      applyAlignmentPrinciple(boids, query);
 
       adjustVelocities(boids, 1);
       moveAndWrap(boids, width, height);

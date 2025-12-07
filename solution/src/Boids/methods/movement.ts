@@ -64,8 +64,8 @@ export function pushAwayBoids(
 export function applySeparationPrinciple(
   boids: Boid[],
   query: QueryMethod<Boid>,
-  separtion_range: number = 30,
-  influence: number = 0.65,
+  separtion_range: number = 35,
+  influence: number = 0.6,
 ) {
   for (const boid of boids) {
     let steerX = 0;
@@ -79,13 +79,15 @@ export function applySeparationPrinciple(
       const difVector = vectorDiff(boid.position, neighbourBoid.position);
       const distance = calcMagnitudeOf(difVector);
 
-      if (distance < separtion_range) {
-        const normalizedDifVector = normalizeVector(difVector);
-        const factor = 1 / distance;
-
-        steerX += normalizedDifVector.x * factor;
-        steerY += normalizedDifVector.y * factor;
+      if (distance === 0 || distance > separtion_range) {
+        return;
       }
+
+      const normalizedDifVector = normalizeVector(difVector);
+      const factor = 1 / distance;
+
+      steerX += normalizedDifVector.x * factor;
+      steerY += normalizedDifVector.y * factor;
     });
 
     boid.velocity.x += steerX * influence;
@@ -97,7 +99,7 @@ export function applyCohesionPrinciple(
   boids: Boid[],
   query: QueryMethod<Boid>,
   cohesionRange: number = 50,
-  influence: number = 0.05,
+  influence: number = 0.04,
 ) {
   for (const boid of boids) {
     let sumX = 0;
@@ -106,6 +108,14 @@ export function applyCohesionPrinciple(
 
     query(boid.position, cohesionRange, (neighbourBoid) => {
       if (boid === neighbourBoid) return;
+
+      // ensure proper range since spatial hash might return some out of range boids
+      if (
+        calcMagnitudeOf(vectorDiff(boid.position, neighbourBoid.position)) >
+        cohesionRange
+      ) {
+        return;
+      }
 
       sumX += neighbourBoid.position.x;
       sumY += neighbourBoid.position.y;
@@ -126,5 +136,46 @@ export function applyCohesionPrinciple(
 
     boid.velocity.x += normalizedDirectionToCom.x * influence;
     boid.velocity.y += normalizedDirectionToCom.y * influence;
+  }
+}
+
+export function applyAlignmentPrinciple(
+  boids: Boid[],
+  query: QueryMethod<Boid>,
+  allignmentRange: number = 50,
+  influence: number = 0.04,
+) {
+  for (const boid of boids) {
+    let sumVX = 0;
+    let sumVY = 0;
+    let count = 0;
+
+    query(boid.position, allignmentRange, (neighbourBoid) => {
+      if (boid === neighbourBoid) return;
+
+      if (
+        calcMagnitudeOf(vectorDiff(boid.position, neighbourBoid.position)) >
+        allignmentRange
+      ) {
+        return;
+      }
+
+      sumVX += neighbourBoid.velocity.x;
+      sumVY += neighbourBoid.velocity.y;
+      count++;
+    });
+
+    if (count === 0) {
+      continue;
+    }
+
+    const avgVelocity: Vector2 = {
+      x: sumVX / count,
+      y: sumVY / count,
+    };
+    const normalizedAvgVelocity = normalizeVector(avgVelocity);
+
+    boid.velocity.x += normalizedAvgVelocity.x * influence;
+    boid.velocity.y += normalizedAvgVelocity.y * influence;
   }
 }
