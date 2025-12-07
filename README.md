@@ -16,9 +16,35 @@
 
 - _Zasada Wyrównania_ - pojedyncza ryba dostosowuje swój kierunek ruchu do innych ryb w pobliżu, żeby płynąć w podobnych sposób jak reszta lokalnej grupy
 
+### Symulacja online
+
+https://hrober0.github.io/BoidsJS/
+
 ### Optymalizacja - spacial hashing
 
-TODO
+Moduł implementuje strukturę danych **Spatial Hash**, umożliwiającą szybkie wyszukiwanie obiektów w pobliżu danej pozycji. Jest szczególnie przydatny w symulacjach **Boids** i zachowań rojowych, gdzie każdy agent oddziałuje tylko z najbliższymi sąsiadami.
+
+#### Zasada działania
+
+Świat dzielony jest na **siatkę kwadratowych komórek** (`cellSize`). Każdy obiekt trafia do odpowiedniej komórki na podstawie swojej pozycji:
+
+```ts
+index = Math.floor(x / cellSize) + Math.floor(y / cellSize) * cellsX;
+```
+
+Przy wyszukiwaniu sąsiadów sprawdzane są tylko komórka, w której znajduje się obiekt, oraz komórki sąsiednie. Dzięki temu unikamy porównywania wszystkich obiektów ze sobą.
+
+Struktóra udostpępnia dwie metody:
+
+- `build(items: T[])` — buduje hash z listy obiektów. Każdy obiekt musi posiadać position: { x: number, y: number }.
+- `query(position: Vector2, range: number, callback: (item: T) => void)` — wywołuje callback dla wszystkich obiektów znajdujących się w promieniu range od podanej pozycji.
+
+#### Korzyści wydajnościowe
+
+Bez użycia spatial hash symulacja Boids wymaga sprawdzania odległości między wszystkimi agentami, co daje złożoność `O(n²)`. Z spatial hash:
+Sprawdzane są tylko obiekty w pobliskich komórkach.
+Efektywna złożoność spada do około `O(n)`.
+Pozwala to na symulację tysięcy agentów w czasie rzeczywistym.
 
 ### Przykłady działania symulacji
 
