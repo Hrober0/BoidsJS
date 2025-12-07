@@ -41,3 +41,7 @@ TODO
 #### Przykład trybu `danger mode`
 
 ![boids-danger-mode](./img/danger-mode.png)
+
+#### Panel do sterowania symulacją
+
+![boids-control-panel](./img/control-panel.png)
