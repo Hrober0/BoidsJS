@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import { useState } from 'react';
 import { useAlignmentPrincipleStore } from './store/alignmentPrincipleStore';
 import { useCohesionPrincipleStore } from './store/cohesionPrincipleStore';
-import { useSeparationPrincipleStore } from './store/SeparationPrincipleStore';
+import { useSeparationPrincipleStore } from './store/separationPrincipleStore';
 
 export function BoidsControlPanel() {
   const {
