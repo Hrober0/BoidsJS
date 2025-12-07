@@ -29,6 +29,7 @@ export function moveAndWrap(
   canvasWidth: number,
   canvasHeight: number,
 ) {
+  const MOVE_OFFSET = 10;
   for (let i = 0; i < boids.length; i++) {
     const b = boids[i];
 
@@ -36,12 +37,16 @@ export function moveAndWrap(
     b.position.y += b.velocity.y;
 
     // wrap screen x
-    if (b.position.x < 0) b.position.x += canvasWidth;
-    else if (b.position.x > canvasWidth) b.position.x -= canvasWidth;
+    if (b.position.x < -MOVE_OFFSET)
+      b.position.x += canvasWidth + MOVE_OFFSET * 2;
+    else if (b.position.x > canvasWidth + MOVE_OFFSET)
+      b.position.x -= canvasWidth + MOVE_OFFSET * 2;
 
     // wrap screen y
-    if (b.position.y < 0) b.position.y += canvasHeight;
-    else if (b.position.y > canvasHeight) b.position.y -= canvasHeight;
+    if (b.position.y < -MOVE_OFFSET)
+      b.position.y += canvasHeight + MOVE_OFFSET * 2;
+    else if (b.position.y > canvasHeight + MOVE_OFFSET)
+      b.position.y -= canvasHeight + MOVE_OFFSET * 2;
   }
 }
 
