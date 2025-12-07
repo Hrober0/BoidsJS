@@ -8,7 +8,7 @@ export function Section({
   return (
     <section
       className={
-        separator ? 'mb-4 border-b-2 border-slate-100/60 pb-3' : undefined
+        separator ? 'mb-4 pb-3' : undefined
       }
     >
       {children}

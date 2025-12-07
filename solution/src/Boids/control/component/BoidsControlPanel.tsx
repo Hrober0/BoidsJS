@@ -80,7 +80,8 @@ export function BoidsControlPanel() {
 }
 
 function GeneralSettingsPanel() {
-  const { numberOfBoids, setNumberOfBoids } = useGeneralSettingStore();
+  const { numberOfBoids, setNumberOfBoids, speed, setSpeed } =
+    useGeneralSettingStore();
 
   return (
     <Section separator>
@@ -93,6 +94,15 @@ function GeneralSettingsPanel() {
         value={numberOfBoids}
         onChange={setNumberOfBoids}
         valueDisplay={String(numberOfBoids)}
+      />
+
+      <Slider
+        label="Speed"
+        min={0.0}
+        max={10.0}
+        value={speed}
+        onChange={setSpeed}
+        valueDisplay={String(speed)}
       />
     </Section>
   );

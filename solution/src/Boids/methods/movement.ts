@@ -1,5 +1,6 @@
 import { useAlignmentPrincipleStore } from '../control/store/alignmentPrincipleStore.ts';
 import { useCohesionPrincipleStore } from '../control/store/cohesionPrincipleStore.ts';
+import { useGeneralSettingStore } from '../control/store/generalSettingStore.ts';
 import { useSeparationPrincipleStore } from '../control/store/separationPrincipleStore.ts';
 import type { Boid, Vector2 } from '../types.ts';
 import { calcMagnitudeOf, normalizeVector, vectorDiff } from './math.ts';
@@ -7,9 +8,9 @@ import type { QueryMethod } from './spatialHash.ts';
 
 export function adjustVelocities(
   boids: Boid[],
-  targetSpeed: number,
   speedNormalization: number = 0.1,
 ) {
+  const { speed: targetSpeed } = useGeneralSettingStore.getState();
   for (let i = 0; i < boids.length; i++) {
     const b = boids[i];
 

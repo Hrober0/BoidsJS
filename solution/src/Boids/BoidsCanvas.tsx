@@ -91,7 +91,7 @@ export default function BoidsCanvas() {
       applyCohesionPrinciple(boids, query);
       applyAlignmentPrinciple(boids, query);
 
-      adjustVelocities(boids, 1);
+      adjustVelocities(boids);
       moveAndWrap(boids, width, height);
 
       drawBoids(boids, ctxForDraw);
