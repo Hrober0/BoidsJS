@@ -54,15 +54,15 @@ Pozwala to na symulację tysięcy agentów w czasie rzeczywistym.
 
 #### Przykład dużego wpływu `zasady rozdzielności`
 
-![boids-separation](./img/max-separation.png)
+![boids-max-separation](./img/max-separation.png)
 
 #### Przykład dużego wpływu `zasady spójności`
 
-![boids-cohesion](./img/max-cohesion.png)
+![boids-max-cohesion](./img/max-cohesion.png)
 
 #### Przykład dużego wpływu `zasady wyrównania`
 
-![boids-alignment](./img/max-alignment.png)
+![boids-max-alignment](./img/max-alignment.png)
 
 #### Przykład trybu `danger mode`
 
