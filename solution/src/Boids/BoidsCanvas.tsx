@@ -28,10 +28,15 @@ export default function BoidsCanvas() {
   const { isActive: dangerModeActive } = useDangerZone();
 
   const boidsRef = useRef<Boid[]>([]);
+  const mousePositionRef = useRef(mousePosition);
 
   const targetNumberOfBoids = useGeneralSettingStore(
     (state) => state.numberOfBoids,
   );
+
+  useEffect(() => {
+    mousePositionRef.current = mousePosition;
+  }, [mousePosition]);
 
   // --- CREATE BOIDS ---
   useEffect(() => {
@@ -77,6 +82,7 @@ export default function BoidsCanvas() {
 
     function loop() {
       const boids = boidsRef.current;
+      const mousePosition = mousePositionRef.current;
 
       clearCanvas(ctxForDraw);
       build(boids);
@@ -101,7 +107,7 @@ export default function BoidsCanvas() {
     loop();
 
     return () => cancelAnimationFrame(frameId);
-  }, [ctx, width, height, mousePosition, dangerModeActive]);
+  }, [ctx, width, height, dangerModeActive, mousePositionRef]);
 
   return (
     <canvas

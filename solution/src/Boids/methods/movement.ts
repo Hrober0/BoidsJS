@@ -178,13 +178,18 @@ export function applyAlignmentPrinciple(
       continue;
     }
 
+    const previousSpeed = calcMagnitudeOf(boid.velocity);
+
     const avgVelocity: Vector2 = {
       x: sumVX / count,
       y: sumVY / count,
     };
     const normalizedAvgVelocity = normalizeVector(avgVelocity);
-
     boid.velocity.x += normalizedAvgVelocity.x * influence;
     boid.velocity.y += normalizedAvgVelocity.y * influence;
+
+    const newDirection = normalizeVector(boid.velocity);
+    boid.velocity.x = newDirection.x * previousSpeed;
+    boid.velocity.y = newDirection.y * previousSpeed;
   }
 }
